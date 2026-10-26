@@ -3,6 +3,7 @@
 // Tags: trendline insertion Aspose.Cells | chart series manipulation .NET | Aspose.Cells chart editing API | Excel chart programmatic modification C# | add regression line Aspose.Cells
 
 using System;
+using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
@@ -56,6 +57,7 @@ class Program
 
             // Ensure the output directory exists
             string? outputDir = Path.GetDirectoryName(outputPath);
+
             if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
